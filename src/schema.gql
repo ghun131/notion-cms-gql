@@ -1,0 +1,29 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Person {
+  person: String!
+}
+
+type Query {
+  users: UserResponse!
+}
+
+type User {
+  avartar_url: String!
+  id: String!
+  name: String!
+  object: String!
+  person: Person!
+  type: String!
+}
+
+type UserResponse {
+  has_more: Boolean!
+  next_cursor: String
+  object: String!
+  results: [User!]!
+  type: String!
+  user: String!
+}
