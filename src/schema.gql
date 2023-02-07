@@ -2,20 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Person {
-  person: String!
-}
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
 
 type Query {
   users: UserResponse!
 }
 
 type User {
-  avartar_url: String!
+  avartar_url: String
+  bot: JSONObject
   id: String!
   name: String!
   object: String!
-  person: Person!
+  person: JSONObject
   type: String!
 }
 

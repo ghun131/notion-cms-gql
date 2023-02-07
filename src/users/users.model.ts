@@ -1,9 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()
 class Person {
   @Field(() => String)
-  person: string;
+  email: string;
 }
 
 @ObjectType()
@@ -20,11 +21,14 @@ export class User {
   @Field(() => String)
   name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   avartar_url: string;
 
-  @Field(() => Person)
-  person: Person;
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  person: object;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  bot: object;
 }
 
 @ObjectType()
