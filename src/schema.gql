@@ -41,8 +41,14 @@ type NormalText {
 }
 
 type Query {
-  database(id: String!): DatabaseResponse!
-  databases: [DatabaseResponse!]!
+  """Get context of one database like title, cover, header name, etc..."""
+  db_context(id: String!): Database!
+
+  """Get data of one db"""
+  db_data(id: String!): DatabaseResponse!
+
+  """List all databases are added to integration"""
+  dbs: DatabaseResponse!
   getUserById(id: String!): User!
   users: Users!
 }

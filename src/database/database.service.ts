@@ -20,8 +20,31 @@ export class DatabaseService {
     });
   }
 
-  searchForDbs() {
-    return `This action returns all database`;
+  async getDbContext(params: OneDBParams) {
+    const clientNotion = await this.notionService.getClientNotion(
+      params.headers.notionclientname,
+    );
+
+    return await clientNotion.databases.retrieve({
+      database_id: params.id,
+    });
+  }
+
+  async searchForDbs(headers: Record<string, any>) {
+    const clientNotion = await this.notionService.getClientNotion(
+      headers.notionclientname,
+    );
+
+    return await clientNotion.search({
+      filter: {
+        value: 'database',
+        property: 'object',
+      },
+      sort: {
+        direction: 'ascending',
+        timestamp: 'last_edited_time',
+      },
+    });
   }
 
   // findOne(id: number) {
