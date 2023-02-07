@@ -26,9 +26,9 @@ export class User {
 }
 
 @ObjectType()
-export class UserResponse {
-  @Field(() => String)
-  user: string;
+export class Users {
+  @Field(() => GraphQLJSONObject)
+  user: object;
 
   @Field(() => String)
   object: string;

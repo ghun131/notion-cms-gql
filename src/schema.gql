@@ -43,7 +43,8 @@ type NormalText {
 type Query {
   database(id: String!): DatabaseResponse!
   databases: [DatabaseResponse!]!
-  users: UserResponse!
+  getUserById(id: String!): User!
+  users: Users!
 }
 
 type User {
@@ -56,11 +57,11 @@ type User {
   type: String!
 }
 
-type UserResponse {
+type Users {
   has_more: Boolean!
   next_cursor: String
   object: String!
   results: [User!]!
   type: String!
-  user: String!
+  user: JSONObject!
 }
