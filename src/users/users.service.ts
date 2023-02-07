@@ -12,6 +12,14 @@ export class UsersService {
 
   async users() {
     const users = await this.notionService.notion.users.list({});
+
     return users;
+  }
+
+  async getUserById(id: string) {
+    const user = await this.notionService.notion.users.retrieve({
+      user_id: id,
+    });
+    return user;
   }
 }
