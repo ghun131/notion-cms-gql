@@ -10,6 +10,8 @@ import { GqlConfigService } from './config/gql-config.service';
 import { ConnectNotionModule } from './connect-notion/connect-notion.module';
 import { ConnectNotionService } from './connect-notion/connect-notion.service';
 import { UsersModule } from './users/users.module';
+import { DatabaseModule } from './database/database.module';
+import { SecretMgmtModule } from './secret-mgmt/secret-mgmt.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { UsersModule } from './users/users.module';
     }),
     ConnectNotionModule,
     UsersModule,
+    DatabaseModule,
+    SecretMgmtModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConnectNotionService],

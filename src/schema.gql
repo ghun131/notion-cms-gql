@@ -2,12 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Database {
+  archieved: Boolean!
+  cover: JSONObject
+  created_by: JSONObject!
+  created_time: String!
+  description: [NormalText!]!
+  icon: JSONObject
+
+  """db id with hyphen"""
+  id: String!
+  is_inline: Boolean!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject!
+  properties: JSONObject!
+  title: [NormalText!]!
+  url: String!
+}
+
+type DatabaseResponse {
+  object: String!
+  results: [Database!]!
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject
 
+type NormalText {
+  annotations: JSONObject
+  href: String
+  plain_text: String!
+  text: JSONObject
+  type: String!
+}
+
 type Query {
+  database(id: String!): DatabaseResponse!
+  databases: [DatabaseResponse!]!
   users: UserResponse!
 }
 

@@ -2,12 +2,6 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()
-class Person {
-  @Field(() => String)
-  email: string;
-}
-
-@ObjectType()
 export class User {
   @Field(() => String)
   id: string;

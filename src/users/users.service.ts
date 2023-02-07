@@ -11,10 +11,6 @@ export class UsersService {
   ) {}
 
   async users() {
-    // const query = await this.notionService.notion.databases.query({
-    //   database_id: this.configService.get('NOTION_DB_ID'),
-    // });
-
     const users = await this.notionService.notion.users.list({});
     return users;
   }
