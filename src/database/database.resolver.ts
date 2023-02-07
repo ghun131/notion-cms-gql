@@ -22,8 +22,10 @@ export class DatabaseResolver {
   }
 
   @Query(() => [DatabaseResponse], { name: 'databases' })
-  getDBs() {
-    return this.databaseService.searchForDbs();
+  getDBs(@Context() context) {
+    const headers = get(context, 'req.headers', {});
+
+    return this.databaseService.searchForDbs(headers);
   }
 
   // @Mutation(() => Database)
