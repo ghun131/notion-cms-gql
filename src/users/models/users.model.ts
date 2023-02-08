@@ -27,7 +27,7 @@ export class User {
 
 @ObjectType()
 export class Users {
-  @Field(() => GraphQLJSONObject)
+  @Field(() => GraphQLJSONObject, { nullable: true })
   user: object;
 
   @Field(() => String)

@@ -8,6 +8,19 @@ input CreateDatabaseInput {
   title: [RichText!]!
 }
 
+type CreateUser {
+  id: String!
+  object: String!
+}
+
+input CreateUserInput {
+  """Integrating Secret"""
+  secretKey: String!
+
+  """User Name"""
+  userName: String!
+}
+
 type Database {
   archieved: Boolean!
   cover: JSONObject
@@ -33,6 +46,30 @@ type DatabaseResponse {
   results: [Database!]!
 }
 
+type DatabaseUser {
+  archived: Boolean
+  cover: JSONObject
+  created_by: JSONObject
+  created_time: String
+  icon: JSONObject
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String
+  object: String!
+  parent: JSONObject
+  properties: JSONObject
+  url: String
+}
+
+type DatabaseUsers {
+  has_more: Boolean!
+  next_cursor: String
+  object: String!
+  results: [DatabaseUser!]!
+  type: String!
+  user: JSONObject
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -44,6 +81,8 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject
 
 type Mutation {
+  createUser(createUserInput: CreateUserInput!): CreateUser!
+
   """
   Create one database, more detail in https://developers.notion.com/reference/create-a-database
   """
@@ -66,14 +105,14 @@ input Parent {
 type Query {
   """List all databases are added to integration"""
   databases: DatabaseResponse!
-  getUserById(id: String!): User!
+  getUserById(id: String!): DatabaseUser!
 
   """Get data of one db"""
   one_database(id: String!): DatabaseResponse!
 
   """Get context of one database like title, cover, header name, etc..."""
   retrieve_database(id: String!): Database!
-  users: Users!
+  users: DatabaseUsers!
 }
 
 input RichText {
@@ -84,23 +123,4 @@ input RichText {
 input Text {
   content: String!
   link: String
-}
-
-type User {
-  avartar_url: String
-  bot: JSONObject
-  id: String!
-  name: String!
-  object: String!
-  person: JSONObject
-  type: String!
-}
-
-type Users {
-  has_more: Boolean!
-  next_cursor: String
-  object: String!
-  results: [User!]!
-  type: String!
-  user: JSONObject!
 }
