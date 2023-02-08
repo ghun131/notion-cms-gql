@@ -1,5 +1,10 @@
+import { HttpService } from '@nestjs/axios';
+import { AxiosError } from 'axios';
 import { Injectable } from '@nestjs/common';
+import { catchError, firstValueFrom } from 'rxjs';
 import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
+import { CreateDatabaseInput } from './dto/create-database.input';
+import { httpHeaders } from 'src/constants';
 
 interface OneDBParams {
   id: string;
@@ -8,7 +13,32 @@ interface OneDBParams {
 
 @Injectable()
 export class DatabaseService {
-  constructor(private notionService: ConnectNotionService) {}
+  constructor(
+    private notionService: ConnectNotionService,
+    private readonly httpService: HttpService,
+  ) {}
+
+  async create(createDatabaseInput: CreateDatabaseInput, clientName: string) {
+    const secret = await this.notionService.getSecretByUserName(clientName);
+    console.log('createDatabaseInput', createDatabaseInput);
+
+    const { data } = await firstValueFrom(
+      this.httpService
+        .post('https://api.notion.com/v1/databases/', createDatabaseInput, {
+          headers: {
+            ...httpHeaders,
+            Authorization: `Bearer ${secret}`,
+          },
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            console.log('error', error);
+            throw 'An error happened!';
+          }),
+        ),
+    );
+    return data;
+  }
 
   async dbById(params: OneDBParams) {
     const clientNotion = await this.notionService.getClientNotion(

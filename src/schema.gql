@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateDatabaseInput {
+  parent: Parent!
+  properties: JSON!
+  title: [RichText!]!
+}
+
 type Database {
   archieved: Boolean!
   cover: JSONObject
@@ -28,9 +34,21 @@ type DatabaseResponse {
 }
 
 """
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject
+
+type Mutation {
+  """
+  Create one database, more detail in https://developers.notion.com/reference/create-a-database
+  """
+  create_database(createDatabaseInput: CreateDatabaseInput!): Database!
+}
 
 type NormalText {
   annotations: JSONObject
@@ -40,17 +58,32 @@ type NormalText {
   type: String!
 }
 
+input Parent {
+  page_id: String!
+  type: String!
+}
+
 type Query {
-  """Get context of one database like title, cover, header name, etc..."""
-  db_context(id: String!): Database!
+  """List all databases are added to integration"""
+  databases: DatabaseResponse!
+  getUserById(id: String!): User!
 
   """Get data of one db"""
-  db_data(id: String!): DatabaseResponse!
+  one_database(id: String!): DatabaseResponse!
 
-  """List all databases are added to integration"""
-  dbs: DatabaseResponse!
-  getUserById(id: String!): User!
+  """Get context of one database like title, cover, header name, etc..."""
+  retrieve_database(id: String!): Database!
   users: Users!
+}
+
+input RichText {
+  text: Text!
+  type: String!
+}
+
+input Text {
+  content: String!
+  link: String
 }
 
 type User {

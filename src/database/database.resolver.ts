@@ -1,21 +1,31 @@
 import get from 'lodash/get';
 
-import { Args, Context, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { DatabaseService } from './database.service';
 import { Database, DatabaseResponse } from './entities/database.entity';
+import { CreateDatabaseInput } from './dto/create-database.input';
 
 @Resolver()
 export class DatabaseResolver {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  // @Mutation(() => Database)
-  // createDatabase(@Args('createDatabaseInput') createDatabaseInput: CreateDatabaseInput) {
-  //   return this.databaseService.create(createDatabaseInput);
-  // }
+  @Mutation(() => Database, {
+    name: 'create_database',
+    description:
+      'Create one database, more detail in https://developers.notion.com/reference/create-a-database',
+  })
+  createDatabase(
+    @Args('createDatabaseInput') createDatabaseInput: CreateDatabaseInput,
+    @Context() context,
+  ) {
+    const clientName = get(context, 'req.headers.notionclientname', {});
+
+    return this.databaseService.create(createDatabaseInput, clientName);
+  }
 
   @Query(() => Database, {
-    name: 'db_context',
+    name: 'retrieve_database',
     description:
       'Get context of one database like title, cover, header name, etc...',
   })
@@ -31,7 +41,7 @@ export class DatabaseResolver {
   }
 
   @Query(() => DatabaseResponse, {
-    name: 'db_data',
+    name: 'one_database',
     description: 'Get data of one db',
   })
   dbById(@Args('id', { type: () => String }) id: string, @Context() context) {
@@ -43,7 +53,7 @@ export class DatabaseResolver {
   }
 
   @Query(() => DatabaseResponse, {
-    name: 'dbs',
+    name: 'databases',
     description: 'List all databases are added to integration',
   })
   getDBs(@Context() context) {
