@@ -70,6 +70,11 @@ type DatabaseUsers {
   user: JSONObject
 }
 
+input Filter {
+  property: String!
+  value: String!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -117,12 +122,51 @@ type Query {
 
   """Get context of one database like title, cover, header name, etc..."""
   retrieve_database(id: String!): Database!
+
+  """Search databases and pages"""
+  search(searchInput: SearchInput!): SearchResponse!
   users: DatabaseUsers!
 }
 
 input RichText {
   text: Text!
   type: String
+}
+
+input SearchInput {
+  filter: Filter
+  query: String!
+  sort: Sort
+}
+
+type SearchResponse {
+  object: String!
+  results: [SearchResult!]!
+}
+
+type SearchResult {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject!
+  created_time: String!
+  description: [NormalText!]
+  icon: JSONObject
+
+  """db id with hyphen"""
+  id: String!
+  is_inline: Boolean!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject!
+  properties: JSONObject!
+  title: [NormalText!]
+  url: String!
+}
+
+input Sort {
+  direction: String!
+  timestamp: String!
 }
 
 input Text {
