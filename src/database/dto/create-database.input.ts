@@ -11,8 +11,8 @@ class Text {
 }
 
 @InputType()
-class RichText {
-  @Field(() => String)
+export class RichText {
+  @Field(() => String, { nullable: true })
   type: string;
 
   @Field(() => Text)

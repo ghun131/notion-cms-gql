@@ -51,7 +51,7 @@ export class Database {
   url: string;
 
   @Field(() => Boolean)
-  archieved: boolean;
+  archived: boolean;
 }
 
 @ObjectType()

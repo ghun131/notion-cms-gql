@@ -5,6 +5,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DatabaseService } from './database.service';
 import { Database, DatabaseResponse } from './entities/database.entity';
 import { CreateDatabaseInput } from './dto/create-database.input';
+import { UpdateDatabaseInput } from './dto/update-database.input';
 
 @Resolver()
 export class DatabaseResolver {
@@ -19,7 +20,7 @@ export class DatabaseResolver {
     @Args('createDatabaseInput') createDatabaseInput: CreateDatabaseInput,
     @Context() context,
   ) {
-    const clientName = get(context, 'req.headers.notionclientname', {});
+    const clientName = get(context, 'req.headers.notionclientname', '');
 
     return this.databaseService.create(createDatabaseInput, clientName);
   }
@@ -62,15 +63,23 @@ export class DatabaseResolver {
     return this.databaseService.searchForDbs(headers);
   }
 
-  // @Mutation(() => Database)
-  // updateDatabase(
-  //   @Args('updateDatabaseInput') updateDatabaseInput: UpdateDatabaseInput,
-  // ) {
-  //   return this.databaseService.update(
-  //     updateDatabaseInput.id,
-  //     updateDatabaseInput,
-  //   );
-  // }
+  @Mutation(() => Database, {
+    name: 'update_database',
+    description:
+      'It changes database column, more info at https://developers.notion.com/reference/update-a-database',
+  })
+  updateDatabase(
+    @Args('updateDatabaseInput') updateDatabaseInput: UpdateDatabaseInput,
+    @Context() context,
+  ) {
+    const clientName = get(context, 'req.headers.notionclientname', '');
+
+    return this.databaseService.update(
+      updateDatabaseInput.id,
+      updateDatabaseInput,
+      clientName,
+    );
+  }
 
   // @Mutation(() => Database)
   // removeDatabase(@Args('id', { type: () => Int }) id: number) {

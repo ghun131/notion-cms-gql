@@ -22,7 +22,7 @@ input CreateUserInput {
 }
 
 type Database {
-  archieved: Boolean!
+  archived: Boolean!
   cover: JSONObject
   created_by: JSONObject!
   created_time: String!
@@ -87,6 +87,11 @@ type Mutation {
   Create one database, more detail in https://developers.notion.com/reference/create-a-database
   """
   create_database(createDatabaseInput: CreateDatabaseInput!): Database!
+
+  """
+  It changes database column, more info at https://developers.notion.com/reference/update-a-database
+  """
+  update_database(updateDatabaseInput: UpdateDatabaseInput!): Database!
 }
 
 type NormalText {
@@ -117,10 +122,17 @@ type Query {
 
 input RichText {
   text: Text!
-  type: String!
+  type: String
 }
 
 input Text {
   content: String!
   link: String
+}
+
+input UpdateDatabaseInput {
+  description: [RichText!]
+  id: String!
+  properties: JSON!
+  title: [RichText!]!
 }

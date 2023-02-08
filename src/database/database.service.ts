@@ -1,10 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { AxiosError } from 'axios';
+import omit from 'lodash/omit';
 import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
 import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
 import { CreateDatabaseInput } from './dto/create-database.input';
 import { httpHeaders } from 'src/constants';
+import { UpdateDatabaseInput } from './dto/update-database.input';
 
 interface OneDBParams {
   id: string;
@@ -20,7 +22,6 @@ export class DatabaseService {
 
   async create(createDatabaseInput: CreateDatabaseInput, clientName: string) {
     const secret = await this.notionService.getSecretByUserName(clientName);
-    console.log('createDatabaseInput', createDatabaseInput);
 
     const { data } = await firstValueFrom(
       this.httpService
@@ -77,13 +78,32 @@ export class DatabaseService {
     });
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} database`;
-  // }
+  async update(
+    id: string,
+    updateDatabaseInput: UpdateDatabaseInput,
+    clientName: string,
+  ) {
+    const secret = await this.notionService.getSecretByUserName(clientName);
+    const payload = omit(updateDatabaseInput, ['id']);
 
-  // update(id: number, updateDatabaseInput: UpdateDatabaseInput) {
-  //   return `This action updates a #${id} database`;
-  // }
+    const { data } = await firstValueFrom(
+      this.httpService
+        .patch('https://api.notion.com/v1/databases/' + id, payload, {
+          headers: {
+            ...httpHeaders,
+            Authorization: `Bearer ${secret}`,
+          },
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            console.log('error', error);
+            throw 'An error happened!';
+          }),
+        ),
+    );
+
+    return data;
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} database`;
