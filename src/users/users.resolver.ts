@@ -1,27 +1,27 @@
 import { Args, Context, Query, Resolver } from '@nestjs/graphql';
+import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import {
-  ListUsersResponse,
-  UserObjectResponse,
-} from '@notionhq/client/build/src/api-endpoints';
-import { Users, User } from './users.model';
+  DatabaseUsers,
+  DatabaseUser,
+} from './models/query-database-users.model';
 import { UsersService } from './users.service';
 
 @Resolver()
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Query(() => Users)
-  async users(@Context() context): Promise<ListUsersResponse> {
+  @Query(() => DatabaseUsers)
+  async users(@Context() context): Promise<any> {
     console.log('context', context.req.headers);
     const result = await this.usersService.users();
 
     return result;
   }
 
-  @Query(() => User)
+  @Query(() => DatabaseUser)
   async getUserById(
     @Args('id', { type: () => String }) id: string,
-  ): Promise<UserObjectResponse> {
+  ): Promise<PageObjectResponse> {
     const result = await this.usersService.getUserById(id);
 
     return result;
