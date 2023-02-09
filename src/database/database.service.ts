@@ -5,13 +5,18 @@ import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
 import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
 import { CreateDatabaseInput } from './dto/create-database.input';
-import { httpHeaders } from 'src/constants';
 import { UpdateDatabaseInput } from './dto/update-database.input';
 
 interface OneDBParams {
   id: string;
   headers: Record<string, any>;
 }
+
+export const httpHeaders = {
+  accept: 'application/json',
+  'Notion-Version': '2022-06-28',
+  'content-type': 'application/json',
+};
 
 @Injectable()
 export class DatabaseService {
