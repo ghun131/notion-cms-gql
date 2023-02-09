@@ -33,6 +33,7 @@ export class ConnectNotionService {
 
   async getClientNotion(clientName: string) {
     const secret = await this.getSecretByUserName(clientName);
+    console.log('secret', secret);
 
     return new Client({ auth: secret });
   }
