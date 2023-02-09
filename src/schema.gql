@@ -107,6 +107,29 @@ type NormalText {
   type: String!
 }
 
+type Page {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject
+  created_time: String!
+  icon: JSONObject
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject
+  properties: JSONObject
+  url: String!
+}
+
+type Pages {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Page!]!
+  type: String!
+}
+
 input Parent {
   page_id: String!
   type: String!
@@ -119,6 +142,8 @@ type Query {
 
   """Get data of one db"""
   one_database(id: String!): DatabaseResponse!
+  pageById(id: String!): Page!
+  pages: Pages!
 
   """Get context of one database like title, cover, header name, etc..."""
   retrieve_database(id: String!): Database!
