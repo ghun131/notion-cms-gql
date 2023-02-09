@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from '@notionhq/client';
 import get from 'lodash/get';
-import { EnvironmentVariables } from 'src/types';
+import { EnvironmentVariables } from '../types';
 
 @Injectable()
 export class ConnectNotionService {

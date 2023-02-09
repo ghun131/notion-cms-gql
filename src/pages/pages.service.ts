@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
+import { ConnectNotionService } from '../connect-notion/connect-notion.service';
 
 @Injectable()
 export class PagesService {

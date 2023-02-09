@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GetDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
-import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
+import { ConnectNotionService } from '../connect-notion/connect-notion.service';
 
 @Injectable()
 export class AdminDatabaseService {

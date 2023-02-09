@@ -1,5 +1,5 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { AuthUser } from 'src/auth/decorator/auth-user.decorator';
+import { AuthUser } from '../auth/decorator/auth-user.decorator';
 import { PageDetail } from './models/page-detail.model';
 import { Page, Pages } from './models/pages.model';
 import { PagesService } from './pages.service';

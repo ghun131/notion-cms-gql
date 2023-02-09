@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AdminDatabaseService } from 'src/admin-database/admin-database.service';
-import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
+import { AdminDatabaseService } from '../admin-database/admin-database.service';
+import { ConnectNotionService } from '../connect-notion/connect-notion.service';
 import { CreateUserInput } from './dto/create-user.input';
 
 @Injectable()

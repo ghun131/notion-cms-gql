@@ -3,9 +3,9 @@ import { AxiosError } from 'axios';
 import omit from 'lodash/omit';
 import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
-import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
 import { CreateDatabaseInput } from './dto/create-database.input';
 import { UpdateDatabaseInput } from './dto/update-database.input';
+import { ConnectNotionService } from '../connect-notion/connect-notion.service';
 
 interface OneDBParams {
   id: string;

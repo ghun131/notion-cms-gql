@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConnectNotionModule } from 'src/connect-notion/connect-notion.module';
 import { HttpModule } from '@nestjs/axios';
 import { PagesService } from './pages.service';
 import { PagesResolver } from './pages.resolver';
+import { ConnectNotionModule } from '../connect-notion/connect-notion.module';
 
 @Module({
   providers: [PagesService, PagesResolver],

@@ -1,7 +1,7 @@
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { NormalText } from 'src/database/entities/text.entity';
 
 import { Field, ObjectType } from '@nestjs/graphql';
+import { NormalText } from '../database/entities/text.entity';
 
 // TODO: SearchResult class is very similar to Database class. They should be reused
 

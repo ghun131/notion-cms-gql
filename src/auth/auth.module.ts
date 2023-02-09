@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
+import { AdminDatabaseModule } from '../admin-database/admin-database.module';
+import { ConnectNotionModule } from '../connect-notion/connect-notion.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { AdminDatabaseModule } from 'src/admin-database/admin-database.module';
-import { ConnectNotionModule } from 'src/connect-notion/connect-notion.module';
 
 @Module({
   providers: [AuthResolver, AuthService],

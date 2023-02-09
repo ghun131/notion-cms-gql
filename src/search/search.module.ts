@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConnectNotionModule } from 'src/connect-notion/connect-notion.module';
+import { ConnectNotionModule } from '../connect-notion/connect-notion.module';
 import { SearchResolver } from './search.resolver';
 import { SearchService } from './search.service';
 
