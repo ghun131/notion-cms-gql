@@ -1,5 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/decorator/auth-user.decorator';
+import { PageDetail } from './models/page-detail.model';
 import { Page, Pages } from './models/pages.model';
 import { PagesService } from './pages.service';
 
@@ -12,7 +13,7 @@ export class PagesResolver {
     return this.pagesService.listPages(clientName);
   }
 
-  @Query(() => Page)
+  @Query(() => PageDetail)
   async pageById(@Args('id') id: string, @AuthUser() clientName: string) {
     return this.pagesService.pageById(id, clientName);
   }

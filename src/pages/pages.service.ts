@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
 
 @Injectable()
@@ -18,6 +17,10 @@ export class PagesService {
     const page = await notionClient.pages.retrieve({
       page_id: id,
     });
-    return page as PageObjectResponse;
+    const blocks = await notionClient.blocks.children.list({ block_id: id });
+    return {
+      page,
+      blocks,
+    };
   }
 }

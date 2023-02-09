@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Block {
+  archived: Boolean!
+  created_by: JSONObject
+  created_time: String!
+  has_children: Boolean!
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  paragraph: JSONObject
+  parent: JSONObject
+  type: String!
+}
+
+type Blocks {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Block!]!
+  type: String!
+}
+
 input CreateDatabaseInput {
   parent: Parent!
   properties: JSON!
@@ -122,6 +144,11 @@ type Page {
   url: String!
 }
 
+type PageDetail {
+  blocks: Blocks!
+  page: Page!
+}
+
 type Pages {
   has_more: Boolean!
   next_cursor: JSONObject
@@ -142,7 +169,7 @@ type Query {
 
   """Get data of one db"""
   one_database(id: String!): DatabaseResponse!
-  pageById(id: String!): Page!
+  pageById(id: String!): PageDetail!
   pages: Pages!
 
   """Get context of one database like title, cover, header name, etc..."""
