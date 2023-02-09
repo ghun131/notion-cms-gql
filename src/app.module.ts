@@ -15,6 +15,7 @@ import { AdminDatabaseModule } from './admin-database/admin-database.module';
 import { AuthModule } from './auth/auth.module';
 import { SearchModule } from './search/search.module';
 import { PagesModule } from './pages/pages.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PagesModule } from './pages/pages.module';
     AuthModule,
     SearchModule,
     PagesModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConnectNotionService],

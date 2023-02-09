@@ -1,8 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { NormalText } from 'src/database/entities/text.entity';
 
 @ObjectType()
-export class Block {
+export class Comment {
   @Field(() => String)
   id: string;
 
@@ -21,28 +22,19 @@ export class Block {
   @Field(() => GraphQLJSONObject, { nullable: true })
   last_edited_by: object;
 
-  @Field(() => String)
-  type: string;
-
-  @Field(() => GraphQLJSONObject, { nullable: true })
-  paragraph: object;
-
-  @Field(() => GraphQLJSONObject, { nullable: true })
-  image: object;
-
   @Field(() => GraphQLJSONObject, { nullable: true })
   parent: object;
 
-  @Field(() => Boolean)
-  archived: boolean;
+  @Field(() => String)
+  discussion_id: string;
 
-  @Field(() => Boolean)
-  has_children: boolean;
+  @Field(() => [NormalText])
+  rich_text: Array<NormalText>;
 }
 @ObjectType()
-export class Blocks {
-  @Field(() => [Block])
-  results: Block[];
+export class Comments {
+  @Field(() => [Comment])
+  results: Comment[];
 
   @Field(() => String)
   object: string;

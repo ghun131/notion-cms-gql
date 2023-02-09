@@ -8,6 +8,7 @@ type Block {
   created_time: String!
   has_children: Boolean!
   id: String!
+  image: JSONObject
   last_edited_by: JSONObject
   last_edited_time: String!
   object: String!
@@ -21,6 +22,26 @@ type Blocks {
   next_cursor: JSONObject
   object: String!
   results: [Block!]!
+  type: String!
+}
+
+type Comment {
+  created_by: JSONObject
+  created_time: String!
+  discussion_id: String!
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject
+  rich_text: [NormalText!]!
+}
+
+type Comments {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Comment!]!
   type: String!
 }
 
@@ -163,6 +184,8 @@ input Parent {
 }
 
 type Query {
+  comments(blockId: String!): Comments!
+
   """List all databases are added to integration"""
   databases: DatabaseResponse!
   getUserById(id: String!): DatabaseUser!
