@@ -12,13 +12,20 @@ export class AuthService {
 
   async createUser(data: CreateUserInput) {
     const db = await this.adminDatabaseService.getAdminDatabase();
-    const { results } = await this.notionService.notion.search({
+    const { results } = await this.notionService.notion.databases.query({
+      database_id: db.id,
       filter: {
-        value: 'page',
-        property: 'object',
+        and: [
+          {
+            property: 'Name',
+            title: {
+              equals: data.userName,
+            },
+          },
+        ],
       },
-      query: data.userName,
     });
+
     if (results?.length) {
       throw new BadRequestException('User Name has already exist');
     }
