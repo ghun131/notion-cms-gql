@@ -29,6 +29,7 @@
     "@nestjs/graphql": "^10.1.7",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/serve-static": "^3.0.0",
+    "@nestjs/throttler": "^4.0.0",
     "@notionhq/client": "^2.2.3",
     "@types/lodash": "^4.14.191",
     "apollo-server-express": "^3.11.1",

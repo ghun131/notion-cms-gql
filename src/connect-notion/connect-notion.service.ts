@@ -4,6 +4,8 @@ import { Client } from '@notionhq/client';
 import get from 'lodash/get';
 import { EnvironmentVariables } from '../types';
 
+const secrets: Map<string, string> = new Map([]);
+
 @Injectable()
 export class ConnectNotionService {
   notion: Client;
@@ -32,8 +34,12 @@ export class ConnectNotionService {
   }
 
   async getClientNotion(clientName: string) {
-    const secret = await this.getSecretByUserName(clientName);
-    console.log('secret', secret);
+    let secret = secrets.get(clientName);
+    if (!secret) {
+      secret = await this.getSecretByUserName(clientName);
+      secrets.set(clientName, secret);
+    }
+    // console.log('secret', secret);
 
     return new Client({ auth: secret });
   }
