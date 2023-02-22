@@ -58,10 +58,9 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
       useFactory: (configService: ConfigService) => {
         return {
           redis: {
-            host: 'localhost',
-            port: 6379,
+            host: configService.get('redis.host'),
+            port: configService.get('redis.port'),
           },
-          name: 'pages',
         };
       },
     }),
