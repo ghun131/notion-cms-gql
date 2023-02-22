@@ -2,6 +2,7 @@ export interface Config {
   cors: CorsConfig;
   graphql: GraphqlConfig;
   server?: ServerConfig;
+  redis: RedisConfig;
 }
 
 export interface CorsConfig {
@@ -16,5 +17,10 @@ export interface GraphqlConfig {
 }
 
 export interface ServerConfig {
+  port: number;
+}
+
+export interface RedisConfig {
+  host: string;
   port: number;
 }

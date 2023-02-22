@@ -1,6 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ExecutionContext, Injectable, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GqlExecutionContext, GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from './app.controller';
@@ -18,6 +18,8 @@ import { PagesModule } from './pages/pages.module';
 import { CommentModule } from './comment/comment.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { BullModule } from '@nestjs/bull';
+import { CacheModule } from './cache/cache.module';
 
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
@@ -51,6 +53,19 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
       ttl: 10,
       limit: 3,
     }),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          redis: {
+            host: 'localhost',
+            port: 6379,
+          },
+          name: 'pages',
+        };
+      },
+    }),
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [
