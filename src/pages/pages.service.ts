@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { CacheService } from 'src/cache/cache.service';
 import { ConnectNotionService } from '../connect-notion/connect-notion.service';
 
 @Injectable()
 export class PagesService {
-  constructor(private notionService: ConnectNotionService) {}
+  constructor(
+    private notionService: ConnectNotionService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   async listPages(clientName: string) {
+    const key = `pages-${clientName}`;
+    const cachedPages = await this.cacheService.cache.get(key);
+    if (cachedPages) {
+      return cachedPages;
+    }
     const notionClient = await this.notionService.getClientNotion(clientName);
-    return notionClient.search({
+    const pages = await notionClient.search({
       filter: { value: 'page', property: 'object' },
     });
+    await this.cacheService.cache.set(key, pages);
+    return pages;
   }
 
   async pageById(id: string, clientName: string) {
