@@ -11,8 +11,8 @@ export class GqlConfigService implements GqlOptionsFactory {
     const graphqlConfig = this.configService.get<GraphqlConfig>('graphql');
     return {
       // schema options
-      // autoSchemaFile: graphqlConfig.schemaDestination || './src/schema.gql',
-      autoSchemaFile: true,
+      autoSchemaFile: graphqlConfig.schemaDestination || 'schema.gql',
+      // autoSchemaFile: true,
       sortSchema: graphqlConfig.sortSchema,
       buildSchemaOptions: {
         numberScalarMode: 'integer',

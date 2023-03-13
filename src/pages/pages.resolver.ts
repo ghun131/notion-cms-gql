@@ -80,7 +80,10 @@ export class PagesResolver {
   }
 
   @Query(() => PageDetail)
-  async pageById(@Args('id') id: string, @AuthUser() clientName: string) {
+  async pageByIdAndBlocks(
+    @Args('id') id: string,
+    @AuthUser() clientName: string,
+  ) {
     return this.pagesService.pageById(id, clientName);
   }
 }

@@ -15,5 +15,6 @@ import { PagesConsumer } from './consumer/pages.consumer';
       name: 'pages',
     }),
   ],
+  exports: [PagesService],
 })
 export class PagesModule {}

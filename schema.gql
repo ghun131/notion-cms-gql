@@ -1,0 +1,319 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Block {
+  archived: Boolean!
+  created_by: JSONObject
+  created_time: String!
+  has_children: Boolean!
+  id: String!
+  image: JSONObject
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  paragraph: JSONObject
+  parent: JSONObject
+  type: String!
+}
+
+type Blocks {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Block!]!
+  type: String!
+}
+
+type Comment {
+  created_by: JSONObject
+  created_time: String!
+  discussion_id: String!
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject
+  rich_text: [NormalText!]!
+}
+
+type Comments {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Comment!]!
+  type: String!
+}
+
+type ConfigProperties {
+  id: String
+  object: String
+}
+
+input ConfigPropertiesInput {
+  """Configuration"""
+  configuration: String!
+
+  """Database Id"""
+  databaseId: String!
+}
+
+type CreateComment {
+  id: String!
+  object: String!
+}
+
+input CreateCommentInput {
+  """Comment"""
+  comment: String!
+
+  """Discussion Thread Id"""
+  discussionId: String
+
+  """Page Id"""
+  pageId: String!
+}
+
+input CreateDatabaseInput {
+  description: [RichText!]
+  parent: Parent!
+  properties: JSON!
+  title: [RichText!]!
+}
+
+type Database {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject!
+  created_time: String!
+  description: [NormalText!]!
+  icon: JSONObject
+
+  """db id with hyphen"""
+  id: String!
+  is_inline: Boolean!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject!
+  properties: JSONObject!
+  title: [NormalText!]!
+  url: String!
+}
+
+type DatabaseResponse {
+  object: String!
+  results: [Database!]!
+}
+
+type DatabaseUser {
+  archived: Boolean
+  cover: JSONObject
+  created_by: JSONObject
+  created_time: String
+  icon: JSONObject
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String
+  object: String!
+  parent: JSONObject
+  properties: JSONObject
+  url: String
+}
+
+type DatabaseUsers {
+  has_more: Boolean!
+  next_cursor: String
+  object: String!
+  results: [DatabaseUser!]!
+  type: String!
+  user: JSONObject
+}
+
+input Filter {
+  property: String!
+  value: String!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type Mutation {
+  configProperties(configPropertiesInput: ConfigPropertiesInput!): ConfigProperties!
+  createComment(createCommentInput: CreateCommentInput!): CreateComment!
+
+  """
+  Create one database, more detail in https://developers.notion.com/reference/create-a-database
+  """
+  create_database(createDatabaseInput: CreateDatabaseInput!): Database!
+  signIn(signInUserInput: SignInUserInput!): SignInUserResult!
+  signUp(signUpUserInput: SignUpUserInput!): SignUpUserResult!
+
+  """
+  It changes database column, more info at https://developers.notion.com/reference/update-a-database
+  """
+  update_database(updateDatabaseInput: UpdateDatabaseInput!): Database!
+}
+
+type NormalText {
+  annotations: JSONObject
+  href: String
+  plain_text: String!
+  text: JSONObject
+  type: String!
+}
+
+type Page {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject
+  created_time: String!
+  icon: JSONObject
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject
+  properties: JSONObject
+  url: String!
+}
+
+type PageDetail {
+  blocks: Blocks!
+  page: Page!
+}
+
+type Pages {
+  has_more: Boolean!
+  next_cursor: JSONObject
+  object: String!
+  results: [Page!]!
+  type: String!
+}
+
+input Parent {
+  page_id: String!
+  type: String!
+}
+
+type PropertiesConfiguration {
+  archived: Boolean
+  created_by: JSONObject
+  created_time: String
+  id: String
+  last_edited_by: JSONObject
+  last_edited_time: String
+  object: String
+  parent: JSONObject
+  properties: JSONObject
+}
+
+type Query {
+  comments(blockId: String!): Comments!
+
+  """List all databases are added to integration"""
+  databases: DatabaseResponse!
+
+  """Get properties of one db that can adding"""
+  getAddProperties(databaseId: String!): Database!
+
+  """Get Page Detail of one db"""
+  getDetailPageOfDatabase(databaseId: String!, pageId: String!): Page!
+  getPropertiesConfiguration(databaseId: String!): PropertiesConfiguration!
+  getUserById(id: String!): DatabaseUser!
+
+  """Get data of one db"""
+  one_database(id: String!): DatabaseResponse!
+  pageByIdAndBlocks(id: String!): PageDetail!
+  pages: Pages!
+
+  """Get context of one database like title, cover, header name, etc..."""
+  retrieve_database(id: String!): Database!
+
+  """Search databases and pages"""
+  search(searchInput: SearchInput!): SearchResponse!
+  users: DatabaseUsers!
+}
+
+input RichText {
+  text: Text!
+  type: String
+}
+
+input SearchInput {
+  filter: Filter
+  query: String!
+  sort: Sort
+}
+
+type SearchResponse {
+  object: String!
+  results: [SearchResult!]!
+}
+
+type SearchResult {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject!
+  created_time: String!
+  description: [NormalText!]
+  icon: JSONObject
+
+  """db id with hyphen"""
+  id: String!
+  is_inline: Boolean!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject!
+  properties: JSONObject!
+  title: [NormalText!]
+  url: String!
+}
+
+input SignInUserInput {
+  """User Name"""
+  userName: String!
+}
+
+type SignInUserResult {
+  accessToken: String!
+}
+
+input SignUpUserInput {
+  """Integrating Secret"""
+  secretKey: String!
+
+  """User Name"""
+  userName: String!
+}
+
+type SignUpUserResult {
+  accessToken: String!
+  id: String!
+  object: String!
+}
+
+input Sort {
+  direction: String!
+  timestamp: String!
+}
+
+input Text {
+  content: String!
+  link: String
+}
+
+input UpdateDatabaseInput {
+  description: [RichText!]
+  id: String!
+  properties: JSON!
+  title: [RichText!]!
+}

@@ -1,7 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { AdminDatabaseService } from '../admin-database/admin-database.service';
 import { ConnectNotionService } from '../connect-notion/connect-notion.service';
-import { CreateUserInput } from './dto/create-user.input';
+import { SignUpUserInput } from './dto/sign-up-user.input';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +14,7 @@ export class AuthService {
     private notionService: ConnectNotionService,
   ) {}
 
-  async createUser(data: CreateUserInput) {
+  async createUser(data: SignUpUserInput) {
     const db = await this.adminDatabaseService.getAdminDatabase();
     const { results } = await this.notionService.notion.databases.query({
       database_id: db.id,
@@ -30,7 +34,7 @@ export class AuthService {
       throw new BadRequestException('User Name has already exist');
     }
 
-    return await this.notionService.notion.pages.create({
+    const result = await this.notionService.notion.pages.create({
       parent: {
         type: 'database_id',
         database_id: db.id,
@@ -56,5 +60,22 @@ export class AuthService {
         },
       },
     });
+
+    return { ...result, accessToken: 'ylRNtDpvMqAQsCOEVrQFlf5GCaBTGFkZ' };
+  }
+
+  async signIn(clientName: string) {
+    try {
+      const exist = await this.notionService.getSecretByUserName(clientName);
+      if (!exist) {
+        throw new NotFoundException('Account Name not found');
+      }
+      return {
+        accessToken: 'ylRNtDpvMqAQsCOEVrQFlf5GCaBTGFkZ',
+      };
+      // amend jwt
+    } catch (error) {
+      throw new NotFoundException('Account Name not found');
+    }
   }
 }

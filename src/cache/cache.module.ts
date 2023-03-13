@@ -18,7 +18,7 @@ import { CacheService } from './cache.service';
                 host: configService.get('redis.host'),
                 port: configService.get('redis.port'),
               },
-              ttl: 60,
+              ttl: 300, // 5 minutes
             }),
         };
       },

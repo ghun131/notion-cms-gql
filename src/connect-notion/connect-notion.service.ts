@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from '@notionhq/client';
 import get from 'lodash/get';
+import { CacheService } from 'src/cache/cache.service';
 import { EnvironmentVariables } from '../types';
-
-const secrets: Map<string, string> = new Map([]);
 
 @Injectable()
 export class ConnectNotionService {
   notion: Client;
-  constructor(private configService: ConfigService<EnvironmentVariables>) {
+  constructor(
+    private configService: ConfigService<EnvironmentVariables>,
+    private cacheService: CacheService,
+  ) {
     this.notion = new Client({
       auth: this.configService.get('NOTION_SECRET'),
     });
@@ -34,10 +36,10 @@ export class ConnectNotionService {
   }
 
   async getClientNotion(clientName: string) {
-    let secret = secrets.get(clientName);
+    let secret = await this.cacheService.cache.get<string>(clientName);
     if (!secret) {
       secret = await this.getSecretByUserName(clientName);
-      secrets.set(clientName, secret);
+      this.cacheService.cache.set(clientName, secret);
     }
     // console.log('secret', secret);
 

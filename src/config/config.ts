@@ -7,7 +7,7 @@ const config: Config = {
   graphql: {
     playgroundEnabled: true,
     debug: true,
-    schemaDestination: './src/schema.gql',
+    schemaDestination: 'schema.gql',
     sortSchema: true,
   },
   redis: {

@@ -36,6 +36,9 @@ export class CreateDatabaseInput {
   @Field(() => [RichText])
   title: RichText[];
 
+  @Field(() => [RichText], { nullable: true })
+  description?: RichText[];
+
   @Field(() => GraphQLJSON)
   properties: object;
 }

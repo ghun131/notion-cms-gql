@@ -6,6 +6,12 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { CreateDatabaseInput } from './dto/create-database.input';
 import { UpdateDatabaseInput } from './dto/update-database.input';
 import { ConnectNotionService } from '../connect-notion/connect-notion.service';
+import { CacheService } from 'src/cache/cache.service';
+import {
+  PageObjectResponse,
+  QueryDatabaseResponse,
+} from '@notionhq/client/build/src/api-endpoints';
+import { SettingDatabaseService } from 'src/setting-database/setting-database.service';
 
 interface OneDBParams {
   id: string;
@@ -23,6 +29,8 @@ export class DatabaseService {
   constructor(
     private notionService: ConnectNotionService,
     private readonly httpService: HttpService,
+    private readonly cacheService: CacheService,
+    private readonly settingDatabaseService: SettingDatabaseService,
   ) {}
 
   async create(createDatabaseInput: CreateDatabaseInput, clientName: string) {
@@ -50,20 +58,41 @@ export class DatabaseService {
     const clientNotion = await this.notionService.getClientNotion(
       params.headers.notionclientname,
     );
+    const key = `database-detail-${params.id}`;
+    let database: QueryDatabaseResponse = await this.cacheService.cache.get(
+      key,
+    );
+    if (!database) {
+      database = await clientNotion.databases.query({
+        database_id: params.id,
+      });
+      this.cacheService.cache.set(key, database);
+    }
+    database.results =
+      await this.settingDatabaseService.filterPropertiesDisplayed(
+        database.results as Array<PageObjectResponse>,
+        params.id,
+        params.headers.notionclientname,
+      );
 
-    return await clientNotion.databases.query({
-      database_id: params.id,
-    });
+    return database;
   }
 
   async getDbContext(params: OneDBParams) {
     const clientNotion = await this.notionService.getClientNotion(
       params.headers.notionclientname,
     );
-
-    return await clientNotion.databases.retrieve({
+    const key = `retrieve-database-${params.id}`;
+    const databaseCached = await this.cacheService.cache.get(key);
+    if (databaseCached) {
+      return databaseCached;
+    }
+    const database = await clientNotion.databases.retrieve({
       database_id: params.id,
     });
+    this.cacheService.cache.set(key, database);
+
+    return database;
   }
 
   async searchForDbs(headers: Record<string, any>) {

@@ -6,8 +6,10 @@ import { DatabaseService } from './database.service';
 import { Database, DatabaseResponse } from './entities/database.entity';
 import { CreateDatabaseInput } from './dto/create-database.input';
 import { UpdateDatabaseInput } from './dto/update-database.input';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Resolver()
+@SkipThrottle()
 export class DatabaseResolver {
   constructor(private readonly databaseService: DatabaseService) {}
 

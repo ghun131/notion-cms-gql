@@ -20,6 +20,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule } from './cache/cache.module';
+import { SettingDatabaseModule } from './setting-database/setting-database.module';
 
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
@@ -65,6 +66,7 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
       },
     }),
     CacheModule,
+    SettingDatabaseModule,
   ],
   controllers: [AppController],
   providers: [
