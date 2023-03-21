@@ -58,6 +58,22 @@ input ConfigPropertiesInput {
   databaseId: String!
 }
 
+type ConfigPropertiesRelation {
+  id: String
+  object: String
+}
+
+input ConfigPropertiesRelationInput {
+  """Configuration"""
+  configuration: String!
+
+  """Relation Id"""
+  relationId: String!
+
+  """Relation Name"""
+  relationName: String!
+}
+
 type CreateComment {
   id: String!
   object: String!
@@ -79,6 +95,35 @@ input CreateDatabaseInput {
   parent: Parent!
   properties: JSON!
   title: [RichText!]!
+}
+
+input CreateRecordInput {
+  """Properties value input"""
+  properties: JSONObject!
+
+  """Relation Id as Database Id"""
+  relationId: String!
+}
+
+type CreateRecordResult {
+  id: String!
+  properties: JSON
+}
+
+input CreateRelationInput {
+  """Relation Name"""
+  name: String!
+
+  """Page Id as User Id"""
+  pageId: String!
+
+  """Relation Properties"""
+  properties: [RelationPropertyInput!]!
+}
+
+type CreateRelationResult {
+  id: String!
+  properties: JSON
 }
 
 type Database {
@@ -145,21 +190,33 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
+type ListRelationsResult {
+  relations: [RelationResult!]!
+}
+
 type Mutation {
+  addRecordToRelation(createRecordInput: CreateRecordInput!): CreateRecordResult!
   configProperties(configPropertiesInput: ConfigPropertiesInput!): ConfigProperties!
+  configPropertiesRelation(configPropertiesRelationInput: ConfigPropertiesRelationInput!): ConfigPropertiesRelation!
   createComment(createCommentInput: CreateCommentInput!): CreateComment!
+  createRelation(createRelationInput: CreateRelationInput!): CreateRelationResult!
 
   """
   Create one database, more detail in https://developers.notion.com/reference/create-a-database
   """
   create_database(createDatabaseInput: CreateDatabaseInput!): Database!
+  deleteRecordToRelation(recordId: String!): UpdateRecordResult!
   signIn(signInUserInput: SignInUserInput!): SignInUserResult!
+  signInV2(signInUserInput: SignInUserV2Input!): SignInUserV2Result!
   signUp(signUpUserInput: SignUpUserInput!): SignUpUserResult!
+  signUpV2(signUpUserInput: SignUpUserV2Input!): SignUpUserV2Result!
+  updateRecordToRelation(updateRecordInput: UpdateRecordInput!): UpdateRecordResult!
 
   """
   It changes database column, more info at https://developers.notion.com/reference/update-a-database
   """
   update_database(updateDatabaseInput: UpdateDatabaseInput!): Database!
+  verifyUser(verifyUser: VerifyUserV2Input!): VerifyUserV2Result!
 }
 
 type NormalText {
@@ -168,6 +225,18 @@ type NormalText {
   plain_text: String!
   text: JSONObject
   type: String!
+}
+
+type NotionObjectResponse {
+  archived: Boolean
+  created_by: JSONObject
+  created_time: String
+  id: String
+  last_edited_by: JSONObject
+  last_edited_time: String
+  object: String
+  parent: JSONObject
+  properties: JSONObject
 }
 
 type Page {
@@ -203,6 +272,12 @@ input Parent {
   type: String!
 }
 
+type PropertiesConfigRelation {
+  configuration: NotionObjectResponse!
+  property_details: JSONObject!
+  property_names: [String!]!
+}
+
 type PropertiesConfiguration {
   archived: Boolean
   created_by: JSONObject
@@ -226,6 +301,10 @@ type Query {
 
   """Get Page Detail of one db"""
   getDetailPageOfDatabase(databaseId: String!, pageId: String!): Page!
+  getInfoRecordOfRelation(recordId: String!): Record!
+  getListRecordsOfRelation(relationId: String!): RecordsResult!
+  getListRelationsOfUser(userId: String!): ListRelationsResult!
+  getPropertiesConfigOfRelation(relationId: String!): PropertiesConfigRelation!
   getPropertiesConfiguration(databaseId: String!): PropertiesConfiguration!
   getUserById(id: String!): DatabaseUser!
 
@@ -240,6 +319,43 @@ type Query {
   """Search databases and pages"""
   search(searchInput: SearchInput!): SearchResponse!
   users: DatabaseUsers!
+}
+
+type Record {
+  archived: Boolean!
+  cover: JSONObject
+  created_by: JSONObject!
+  created_time: String!
+  icon: JSONObject
+
+  """db id with hyphen"""
+  id: String!
+  last_edited_by: JSONObject
+  last_edited_time: String!
+  object: String!
+  parent: JSONObject!
+  properties: JSONObject!
+  url: String!
+}
+
+type RecordsResult {
+  has_more: Boolean
+  object: String!
+  results: [Record!]!
+}
+
+input RelationPropertyInput {
+  """Property Name"""
+  name: String!
+
+  """Property Type"""
+  type: String
+}
+
+type RelationResult {
+  color: String
+  id: String
+  name: String
 }
 
 input RichText {
@@ -287,6 +403,19 @@ type SignInUserResult {
   accessToken: String!
 }
 
+input SignInUserV2Input {
+  """Email"""
+  email: String!
+
+  """Password"""
+  password: String!
+}
+
+type SignInUserV2Result {
+  accessToken: String!
+  id: String!
+}
+
 input SignUpUserInput {
   """Integrating Secret"""
   secretKey: String!
@@ -299,6 +428,18 @@ type SignUpUserResult {
   accessToken: String!
   id: String!
   object: String!
+}
+
+input SignUpUserV2Input {
+  """Email"""
+  email: String!
+
+  """Password"""
+  password: String!
+}
+
+type SignUpUserV2Result {
+  success: Boolean!
 }
 
 input Sort {
@@ -316,4 +457,30 @@ input UpdateDatabaseInput {
   id: String!
   properties: JSON!
   title: [RichText!]!
+}
+
+input UpdateRecordInput {
+  """Properties value input"""
+  properties: JSONObject!
+
+  """Record Id as Page Id"""
+  recordId: String!
+}
+
+type UpdateRecordResult {
+  id: String!
+  properties: JSON
+}
+
+input VerifyUserV2Input {
+  """Code"""
+  code: String!
+
+  """Email"""
+  email: String!
+}
+
+type VerifyUserV2Result {
+  id: String!
+  object: String!
 }
