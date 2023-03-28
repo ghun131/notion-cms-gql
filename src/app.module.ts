@@ -37,7 +37,7 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.dev.local',
+      envFilePath: '.env',
       load: [config],
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
