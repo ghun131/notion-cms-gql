@@ -1,8 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  DatabaseObjectResponse,
-  PageObjectResponse,
-} from '@notionhq/client/build/src/api-endpoints';
+import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { CacheService } from '@/cache/cache.service';
 import { ConnectNotionService } from '@/connect-notion/connect-notion.service';
 import { ConfigPropertiesRelationInput } from '@/module/version2/setting-relation/dto/config-properties.dto';
@@ -18,14 +15,20 @@ export class SettingRelationService {
 
   async getListRelationsOfUser(pageId: string) {
     try {
-      const pageDetail = (await this.notionService.notion.pages.retrieve({
-        page_id: pageId,
-      })) as PageObjectResponse;
+      const key = `list-relations-of-user-pageId:${pageId}`;
+      let pageDetail: PageObjectResponse = await this.cacheService.cache.get(
+        key,
+      );
+      if (!pageDetail) {
+        pageDetail = (await this.notionService.notion.pages.retrieve({
+          page_id: pageId,
+        })) as PageObjectResponse;
+      }
+
       const relations =
         pageDetail.properties.relations.type === 'multi_select'
           ? pageDetail.properties.relations.multi_select
           : [];
-      console.log('relations', relations);
       return relations;
     } catch (error) {
       throw new BadRequestException(
@@ -109,9 +112,30 @@ export class SettingRelationService {
     return configurationsDbId;
   }
 
+  async getConfigurationById(configId: string) {
+    const key = `configuration-id-${configId}`;
+    const configCached: PageObjectResponse = await this.cacheService.cache.get(
+      key,
+    );
+    if (configCached) {
+      return configCached;
+    }
+    const config = await this.notionService.notion.pages.retrieve({
+      page_id: configId,
+    });
+    this.cacheService.cache.set(key, config);
+
+    return config as PageObjectResponse;
+  }
+
   async saveConfigProperties(
     configPropertiesInput: ConfigPropertiesRelationInput,
     userId: string,
+    options: {
+      replaceOldConfiguration: boolean;
+    } = {
+      replaceOldConfiguration: true,
+    },
   ) {
     const configurationsDbId = await this.getConfigurationsDbId(userId);
     const { results } = await this.notionService.notion.databases.query({
@@ -133,7 +157,7 @@ export class SettingRelationService {
         ],
       },
     });
-    const [page] = results;
+    const [page] = results as PageObjectResponse[];
     const cacheKey = `properties-configuration-${userId}-${configPropertiesInput.relationId}`;
     if (!page) {
       // create record as a page
@@ -174,7 +198,7 @@ export class SettingRelationService {
             rich_text: [
               {
                 text: {
-                  content: configPropertiesInput.configuration,
+                  content: JSON.stringify(configPropertiesInput.configuration),
                 },
               },
             ],
@@ -186,6 +210,21 @@ export class SettingRelationService {
       return newPage;
     }
     // update page
+    let newConfiguration;
+    if (options?.replaceOldConfiguration) {
+      newConfiguration = configPropertiesInput.configuration;
+    } else {
+      let oldConfig = {};
+      try {
+        const config =
+          page.properties.configuration.type === 'rich_text'
+            ? page.properties.configuration.rich_text?.[0]?.plain_text
+            : '{}';
+        oldConfig = JSON.parse(config);
+      } catch (error) {}
+      const objNewConfig = configPropertiesInput.configuration;
+      newConfiguration = { ...oldConfig, ...objNewConfig };
+    }
     const updatePage = await this.notionService.notion.pages.update({
       page_id: page.id,
       properties: {
@@ -193,7 +232,7 @@ export class SettingRelationService {
           rich_text: [
             {
               text: {
-                content: configPropertiesInput.configuration,
+                content: JSON.stringify(newConfiguration),
               },
             },
           ],
@@ -201,6 +240,7 @@ export class SettingRelationService {
       },
     });
     this.cacheService.cache.set(cacheKey, updatePage);
+    this.cacheService.cache.del(`configuration-id-${updatePage.id}`);
     console.log('updatePage', updatePage);
     return updatePage;
   }
@@ -301,6 +341,7 @@ export class SettingRelationService {
       relationId,
       userId,
     );
+    console.log('hiddenKeys', hiddenKeys);
     if (!hiddenKeys || !hiddenKeys.size) {
       return data;
     }

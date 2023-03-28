@@ -6,6 +6,6 @@ import { RelationService } from './relation.service';
 @Module({
   imports: [SettingRelationModule],
   providers: [RelationResolver, RelationService],
-  exports: [],
+  exports: [RelationService],
 })
 export class RelationModule {}

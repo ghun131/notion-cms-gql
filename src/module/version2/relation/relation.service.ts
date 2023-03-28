@@ -1,6 +1,10 @@
+import { CacheService } from '@/cache/cache.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import {
+  DatabaseObjectResponse,
+  PageObjectResponse,
+} from '@notionhq/client/build/src/api-endpoints';
 import { ConnectNotionService } from 'src/connect-notion/connect-notion.service';
 import { SettingRelationService } from '../setting-relation/setting-relation.service';
 import { CreateRecordInput } from './dto/create-record.input';
@@ -13,6 +17,7 @@ export class RelationService {
   constructor(
     private notionService: ConnectNotionService,
     private configService: ConfigService,
+    private cacheService: CacheService,
     private settingRelationService: SettingRelationService,
   ) {
     this.dbId = configService.get<string>('NOTION_MANAGEMENT_USERS_V2_DB_ID');
@@ -29,12 +34,18 @@ export class RelationService {
     };
   }
 
-  async getListRecordsOfRelation(relationId: string) {
+  async getListRecordsOfRelation(relationId: string, userId?: string) {
     const result = await this.notionService.notion.databases.query({
       database_id: relationId,
     });
-
-    console.log('result', result);
+    if (userId) {
+      result.results =
+        await this.settingRelationService.filterPropertiesDisplayed(
+          result.results as Array<PageObjectResponse>,
+          relationId,
+          userId,
+        );
+    }
 
     return result;
   }
@@ -94,6 +105,23 @@ export class RelationService {
     });
 
     return result;
+  }
+
+  async getDetailRelation(relationId: string) {
+    const key = `detail-relation-${relationId}`;
+    let relation: DatabaseObjectResponse & { name?: string } =
+      await this.cacheService.cache.get(key);
+    if (!relation) {
+      relation = (await this.notionService.notion.databases.retrieve({
+        database_id: relationId,
+      })) as DatabaseObjectResponse & { name?: string };
+    }
+
+    if (relation.title) {
+      relation.name = relation.title?.[0]?.plain_text;
+    }
+
+    return relation;
   }
 
   async addRecordToRelation(data: CreateRecordInput) {

@@ -22,6 +22,7 @@ import { BullModule } from '@nestjs/bull';
 import { CacheModule } from './cache/cache.module';
 import { SettingDatabaseModule } from './setting-database/setting-database.module';
 import { Version2Module } from './module/version2/version2-module.module';
+import { PublicRelationModule } from './module/public/relation/public-relation.module';
 
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
@@ -69,6 +70,7 @@ export class GqlThrottlerGuard extends ThrottlerGuard {
     CacheModule,
     SettingDatabaseModule,
     Version2Module,
+    PublicRelationModule,
   ],
   controllers: [AppController],
   providers: [

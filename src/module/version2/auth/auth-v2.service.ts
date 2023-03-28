@@ -70,7 +70,7 @@ export class AuthV2Service {
           rich_text: [
             {
               text: {
-                content: randomCode(),
+                content: '111111' || randomCode(),
               },
             },
           ],

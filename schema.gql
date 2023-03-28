@@ -65,7 +65,7 @@ type ConfigPropertiesRelation {
 
 input ConfigPropertiesRelationInput {
   """Configuration"""
-  configuration: String!
+  configuration: JSONObject!
 
   """Relation Id"""
   relationId: String!
@@ -173,6 +173,19 @@ type DatabaseUsers {
   results: [DatabaseUser!]!
   type: String!
   user: JSONObject
+}
+
+type DetailRelationResult {
+  created_by: JSON!
+  created_time: String!
+  description: [JSON!]!
+  id: String!
+  last_edited_by: JSON
+  last_edited_time: String!
+  name: String
+  object: String!
+  properties: JSON
+  title: [JSON!]!
 }
 
 input Filter {
@@ -301,6 +314,7 @@ type Query {
 
   """Get Page Detail of one db"""
   getDetailPageOfDatabase(databaseId: String!, pageId: String!): Page!
+  getDetailRelation(relationId: String!): DetailRelationResult!
   getInfoRecordOfRelation(recordId: String!): Record!
   getListRecordsOfRelation(relationId: String!): RecordsResult!
   getListRelationsOfUser(userId: String!): ListRelationsResult!
